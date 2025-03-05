@@ -34,10 +34,10 @@ Allows students to view their evaluation results and feedback.
 
 Tech Stack
 
-Frontend: HTML, CSS, JavaScript (or Framework, e.g., React/Angular/Vue)
+Frontend: HTML, CSS, JavaScript (or Framework, e.g., React)
 
-Backend: Node.js, Flask, or Django (choose as per implementation)
+Backend: Node.js 
 
-Database: MySQL, PostgreSQL, or MongoDB
+Database: MongoDB
 
 Evaluation Engine: Python (for code execution and test case validation)
