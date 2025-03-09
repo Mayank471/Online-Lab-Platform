@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs"
 
 import { generateToken } from "../lib/utils.js";
 
-export const signup = async (req,res)=>{
+export const register = async (req,res)=>{
     const {username , email,password,firstName,lastName,role} = req.body;
     try {
         if(!username || !email || !password || !firstName || !lastName || !role) {
@@ -26,14 +26,11 @@ export const signup = async (req,res)=>{
             return res.status(400).json({ message: "Invalid role" });
         }
 
-        // Generate password Hash using bcrypt
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password,salt);
         // new User object
         const newUser = new User({
             username : username,
             email : email,
-            password:hashedPassword,
+            password:password,
             firstName: firstName,
             lastName: lastName, 
             role: role
@@ -78,13 +75,13 @@ export const login=async (req,res)=>{
 
         // user doesnt exist
         if (!user){
-            return res.status(400).json({message: "Invalid Credentials"});
+            return res.status(400).json({message: "Invalid Credentials "});
         }
 
-        // if user exists check for passwd
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        // passwd for the email doesnt match
-        if (!isPasswordCorrect){
+        // If user exists check for passwd
+        const isPasswordCorrect = await user.comparePassword(password);
+
+        if(!isPasswordCorrect){
             return res.status(400).json({message: "Invalid Credentials"});
         }
         // if everything is correct generate JWT
