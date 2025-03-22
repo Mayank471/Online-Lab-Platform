@@ -31,6 +31,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  enrolledClassrooms: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Classroom'
+  }],
+  createdClassrooms: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Classroom'
+  }],
   createdAt: {
     type: Date,
     default: Date.now
