@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const ClassroomSchema = new mongoose.Schema({
-  name: {
+  classroomName: {
     type: String,
     required: true,
     trim: true
@@ -10,20 +10,21 @@ const ClassroomSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  instructor: {
+  instructorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  students: [{
+  enrolledStudents: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
   assignments: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Assignment'
+    ref: 'Assignment',
+    default: []
   }],
-  code: {
+  classroomCode: {
     type: String,
     unique: true,
     required: true
@@ -51,7 +52,7 @@ ClassroomSchema.virtual('assignmentsWithStats').get(async function() {
 });
 
 // Add indexes for better query performance
-ClassroomSchema.index({ code: 1 });
+//ClassroomSchema.index({ code: 1 });
 ClassroomSchema.index({ instructor: 1 });
 
 const Classroom = mongoose.model('Classroom', ClassroomSchema);

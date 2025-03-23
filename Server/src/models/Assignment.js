@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const AssignmentSchema = new mongoose.Schema({
-  title: {
+  assignmentName: {
     type: String,
     required: true
   },
@@ -9,7 +9,7 @@ const AssignmentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  classroom: {
+  classroomId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Classroom',
     required: true
@@ -52,7 +52,8 @@ const AssignmentSchema = new mongoose.Schema({
     feedback: {
       type: String,
       default: ''
-    }
+    },
+    default : []
   }],
   testCases: [{
     input: String,

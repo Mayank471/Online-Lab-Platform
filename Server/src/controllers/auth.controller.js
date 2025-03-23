@@ -20,6 +20,12 @@ export const register = async (req,res)=>{
             return res.status(400).json({message : "User already exists with this email ID"});
         }
 
+        // check usename is unique
+        const isUsernameUnique = await User.findOne({username})
+        if(isUsernameUnique){
+            return res.status(400).json({message : "Username already taken"})
+        }
+
         // check for the valid role
         const validRoles = ['student', 'instructor'];
         if (!validRoles.includes(role)) {

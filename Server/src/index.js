@@ -13,14 +13,11 @@ app.use(cors());
 app.use(express.json())
 app.use(cookieParser());
 // Import Routes
-import userRoutes from "./routes/users.js";
+
 import compilerRoutes from "./routes/compile.route.js"; // ES6
 import authRoutes from "./routes/auth.routes.js";
-
-// Routes
-app.use("/api/users", userRoutes);
-app.use("/api/compile", compilerRoutes);
-
+import dashboardRoutes from "./routes/dashboard.route.js";
+import classroomRoutes from  "./routes/classroom.routes.js"
 
 app.get("/", (req, res) => {
   res.send("API is running...");
@@ -29,7 +26,8 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/compile", compilerRoutes);
-
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/classroom",classroomRoutes);
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
