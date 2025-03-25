@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Split from "react-split";
 import CodeMirror from "@uiw/react-codemirror";
 import { cpp } from "@codemirror/lang-cpp";
 import { python } from "@codemirror/lang-python";
@@ -15,7 +16,7 @@ const languageExtensions = {
 
 const EditorPage = () => {
   const [script, setCode] = useState('print("Hello")');
-  const [input, setInput] = useState(""); 
+  const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("python3");
   const versionIndex = 3;
@@ -50,8 +51,14 @@ const EditorPage = () => {
   };
 
   return (
-    <div className="container">
+    <Split
+      sizes={[35, 65]}
+      minSize={200}
+      direction="horizontal"
+      className="split-pane"
+    >
       <div className="left-panel">
+        
         <div className="problem-description">
           <h2>Problem Title</h2>
           <p>
@@ -70,7 +77,6 @@ const EditorPage = () => {
             • Each element is between -10^9 and 10^9
           </p>
         </div>
-        
         <div className="output-container">
           <h3>Output:</h3>
           <pre className="output-box">{output}</pre>
@@ -79,15 +85,15 @@ const EditorPage = () => {
   
       <div className="right-panel">
         <div className="editor-container">
-        <CodeMirror
-  value={script}
-  height="100%"
-  width="100%"
-  extensions={[languageExtensions[language]]}
-  theme={oneDark}
-  onChange={(value) => setCode(value)}
-  style={{ flex: 1 }}
-/>
+          <CodeMirror
+            value={script}
+            height="100%"
+            width="100%"
+            extensions={[languageExtensions[language]]}
+            theme={oneDark}
+            onChange={(value) => setCode(value)}
+            style={{ flex: 1, overflowY: "auto" }}
+          />
   
           <div className="bottom-bar">
             <select
@@ -124,7 +130,7 @@ const EditorPage = () => {
           />
         </div>
       </div>
-    </div>
+    </Split>
   );
 };
 
