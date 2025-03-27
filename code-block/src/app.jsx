@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import {Loader} from "lucide-react"
 import {Toaster} from "react-hot-toast"
 import { useThemeStore } from './store/useThemeStore.js'
+import HomePage from "./pages/homePage";
 function App() {
   const {authUser,checkAuth,isCheckingAuth}= useAuthStore();
   const {theme} = useThemeStore();
@@ -32,10 +33,12 @@ function App() {
       <Navbar/>
 
       <Routes>
+        <Route path="/Homepage" element={<HomePage />} />
         <Route path='/' element={authUser ? <HomePage/> : <Navigate to="/login" />} />
         <Route path='/login' element={ !authUser ? <LoginPage/>  : < Navigate to="/" />} />
         <Route path='/profile' element={authUser ? <ProfilePage/> : <Navigate to="/login" />} />
         <Route path='/signup' element={!authUser ? <SignUpPage/> : < Navigate to="/" />} />
+        
       </Routes>
       <Toaster/>
     </div>
