@@ -137,3 +137,43 @@ export const getAllClassrooms = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getClassroomAssignments = async (req, res) => {
+    try {
+        const { classroomId } = req.params;
+        const classroom = await Classroom.findById(classroomId)
+            .populate({
+                path: 'assignments',
+                select: 'assignmentName description dueDate status',
+                options: { sort: { dueDate: 1 } }
+            });
+
+        if (!classroom) {
+            return res.status(404).json({ message: "Classroom not found" });
+        }
+
+        // Group assignments by status
+        const assignments = {
+            active: [],
+            missed: [],
+            completed: []
+        };
+
+        const now = new Date();
+        classroom.assignments.forEach(assignment => {
+            const dueDate = new Date(assignment.dueDate);
+            if (dueDate > now && assignment.status === 'published') {
+                assignments.active.push(assignment);
+            } else if (dueDate < now && assignment.status === 'published') {
+                assignments.missed.push(assignment);
+            } else if (assignment.status === 'closed') {
+                assignments.completed.push(assignment);
+            }
+        });
+
+        res.status(200).json(assignments);
+    } catch (error) {
+        console.error("Error fetching classroom assignments:", error);
+        res.status(500).json({ message: error.message });
+    }
+};
