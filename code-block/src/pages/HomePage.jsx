@@ -1,8 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [classCode, setClassCode] = useState('');
+    const [classrooms, setClassrooms] = useState([]);
+    const [showClassrooms, setShowClassrooms] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchClassrooms();
+    }, []);
+
+    const fetchClassrooms = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/classroom');
+            const data = await response.json();
+            setClassrooms(data);
+        } catch (error) {
+            console.error('Error fetching classrooms:', error);
+        }
+    };
 
     const handleJoinClick = () => {
         setIsPopupVisible(true);
@@ -19,6 +37,10 @@ const HomePage = () => {
         setClassCode('');
     };
 
+    const handleViewLabs = () => {
+        navigate('/classrooms');
+    };
+
     return (
         <div className="p-6 font-sans text-base-content bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen flex flex-col items-center pt-20">
             <header className="text-center mb-10">
@@ -29,7 +51,7 @@ const HomePage = () => {
                 <section className="mb-12 bg-white shadow-lg rounded-lg p-6">
                     <h2 className="text-3xl font-semibold text-blue-700">Explore Labs</h2>
                     <p className="text-base-content/70 mt-3 text-lg">Browse through a variety of labs and start experimenting today.</p>
-                    <button className="btn btn-primary mt-6 px-6 py-3 text-lg">View Labs</button>
+                    <button className="btn btn-primary mt-6 px-6 py-3 text-lg" onClick={handleViewLabs}>View Labs</button>
                 </section>
                 <section className="mb-12 bg-white shadow-lg rounded-lg p-6">
                     <h2 className="text-3xl font-semibold text-green-700">Join a Class</h2>

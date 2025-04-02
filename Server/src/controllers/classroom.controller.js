@@ -126,3 +126,14 @@ export const addStudents = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getAllClassrooms = async (req, res) => {
+    try {
+        const classrooms = await Classroom.find()
+            .populate('instructorId', 'name email')
+            .select('classroomName description classroomCode enrolledStudents');
+        res.status(200).json(classrooms);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
