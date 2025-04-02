@@ -37,7 +37,7 @@ const ClassroomSchema = new mongoose.Schema({
 
 // Virtual for getting number of students
 ClassroomSchema.virtual('studentCount').get(function() {
-  return this.students.length;
+  return this.enrolledStudents.length;
 });
 
 // Virtual for getting number of assignments
