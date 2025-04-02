@@ -19,8 +19,12 @@ const ClassroomsPage = () => {
         }
     };
 
+    const handleClassroomClick = (classroomId) => {
+        navigate(`/classroom/${classroomId}`);
+    };
+
     return (
-        <div className="p-6 bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen">
+        <div className="p-6 pt-24 bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen">
             <div className="max-w-6xl mx-auto">
                 <div className="flex items-center mb-6">
                     <button 
@@ -37,7 +41,11 @@ const ClassroomsPage = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {classrooms.map((classroom) => (
-                        <div key={classroom._id} className="bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-shadow duration-300 p-6">
+                        <div 
+                            key={classroom._id} 
+                            className="bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-shadow duration-300 p-6 cursor-pointer"
+                            onClick={() => handleClassroomClick(classroom._id)}
+                        >
                             <h4 className="text-xl font-semibold text-blue-700 mb-2">{classroom.classroomName}</h4>
                             <p className="text-gray-600 mb-4">{classroom.description}</p>
                             <div className="flex flex-col space-y-2">

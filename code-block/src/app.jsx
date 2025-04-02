@@ -10,7 +10,8 @@ import {Loader} from "lucide-react"
 import {Toaster} from "react-hot-toast"
 import { useThemeStore } from './store/useThemeStore.js'
 import HomePage from "./pages/HomePage.jsx";
-import ClassroomsPage from './pages/ShowClassrooms.jsx'
+import ShowClassrooms from './pages/ShowClassrooms.jsx'
+import ClassroomPage from './pages/ClassroomPage.jsx'
 
 function App() {
   const {authUser,checkAuth,isCheckingAuth}= useAuthStore();
@@ -40,8 +41,9 @@ function App() {
         <Route path='/login' element={ !authUser ? <LoginPage/>  : < Navigate to="/" />} />
         <Route path='/profile' element={authUser ? <ProfilePage/> : <Navigate to="/login" />} />
         <Route path='/signup' element={!authUser ? <SignUpPage/> : < Navigate to="/" />} />
-        {/* <Route path='/classrooms' element={authUser ? <ClassroomsPage/> : <Navigate to="/login" />} /> */}
-        <Route path='/classrooms' element={ <ClassroomsPage/> } />
+        {/* <Route path='/classrooms' element={authUser ? <ShowClassrooms/> : <Navigate to="/login" />} /> */}
+        <Route path='/classrooms' element={ <ShowClassrooms/> } />
+        <Route path='/classroom/:classroomId' element={<ClassroomPage />} />
       </Routes>
       <Toaster/>
     </div>
