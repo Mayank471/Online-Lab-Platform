@@ -45,7 +45,7 @@ const ClassroomPage = () => {
                             className={`px-4 py-2 rounded-lg transition-colors ${
                                 activeFilter === 'active' 
                                     ? 'bg-blue-600 text-white' 
-                                    : 'bg-gray-200 hover:bg-gray-300'
+                                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                             }`}
                         >
                             Active ({assignments.active.length})
@@ -55,7 +55,7 @@ const ClassroomPage = () => {
                             className={`px-4 py-2 rounded-lg transition-colors ${
                                 activeFilter === 'missed' 
                                     ? 'bg-red-600 text-white' 
-                                    : 'bg-gray-200 hover:bg-gray-300'
+                                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                             }`}
                         >
                             Missed ({assignments.missed.length})
@@ -65,7 +65,7 @@ const ClassroomPage = () => {
                             className={`px-4 py-2 rounded-lg transition-colors ${
                                 activeFilter === 'completed' 
                                     ? 'bg-green-600 text-white' 
-                                    : 'bg-gray-200 hover:bg-gray-300'
+                                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                             }`}
                         >
                             Completed ({assignments.completed.length})
@@ -81,7 +81,7 @@ const ClassroomPage = () => {
                                 onClick={() => handleAssignmentClick(assignment._id)}
                                 className="bg-white p-6 rounded-lg shadow cursor-pointer hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-gray-200"
                             >
-                                <h3 className="font-semibold text-lg mb-2">{assignment.assignmentName}</h3>
+                                <h3 className="font-semibold text-lg mb-2 text-gray-900">{assignment.assignmentName}</h3>
                                 <p className="text-gray-600 mb-3">{assignment.description}</p>
                                 <p className="text-sm text-gray-500">
                                     Due: {new Date(assignment.dueDate).toLocaleDateString()}
