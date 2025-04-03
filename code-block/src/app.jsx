@@ -12,6 +12,7 @@ import { useThemeStore } from './store/useThemeStore.js'
 import HomePage from "./pages/HomePage.jsx";
 import ShowClassrooms from './pages/ShowClassrooms.jsx'
 import ClassroomPage from './pages/ClassroomPage.jsx'
+import SettingsPage from './pages/SettingsPage.jsx'
 
 function App() {
   const {authUser,checkAuth,isCheckingAuth}= useAuthStore();
@@ -26,13 +27,13 @@ function App() {
   // diaplaying Loader while authenticating the user
   if(isCheckingAuth && authUser){
     return (
-      <div className='flex items-center justify-center h-screen'>
+      <div className='flex items-center justify-center h-screen' data-theme={theme}>
         <Loader className = "size-10 animate-spin"/>
       </div>
     )
   }
   return (
-    <div data-theme= {theme}>
+    <div data-theme={theme} className="min-h-screen bg-base-100 text-base-content">
       <Navbar/>
 
       <Routes>
@@ -43,6 +44,7 @@ function App() {
         {/* <Route path='/classrooms' element={authUser ? <ShowClassrooms/> : <Navigate to="/login" />} /> */}
         <Route path='/classrooms' element={ <ShowClassrooms/> } />
         <Route path='/classroom/:classroomId' element={<ClassroomPage />} />
+        <Route path='/settings' element={<SettingsPage />} />
       </Routes>
       <Toaster/>
     </div>

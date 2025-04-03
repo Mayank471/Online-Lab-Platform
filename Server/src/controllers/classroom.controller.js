@@ -100,27 +100,32 @@ export const createClassroom = async (req, res) => {
 
 export const addStudents = async (req, res) => {
     try {
-        const { classroomId, studentIds } = req.body;
+        const { classCode, username } = req.body;
 
-        // Ensure classroomId and studentIds are provided
-        if (!classroomId || !Array.isArray(studentIds)) {
+        // Ensure classCode and username are provided
+        if (!classCode || !username) {
             return res.status(400).json({ message: "Invalid input data" });
         }
 
         // Ensure classroom exists
-        const classroom = await Classroom.findById(classroomId);
+        const classroom = await Classroom.findOne({ classroomCode: classCode });
         if (!classroom) {
             return res.status(404).json({ message: "Classroom not found" });
         }
 
-        // Add students to enrolledStudents and avoid duplicates
-        await Classroom.findByIdAndUpdate(
-            classroomId,
-            { $addToSet: { enrolledStudents: { $each: studentIds } } },
-        );        
-        
+        // Ensure user exists
+        const student = await User.findOne({ username });
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
 
-        res.status(201).json({ classroom });
+        // Add student to enrolledStudents and avoid duplicates
+        await Classroom.findByIdAndUpdate(
+            classroom._id,
+            { $addToSet: { enrolledStudents: student._id } },
+        );
+
+        res.status(201).json({ message: "Student added successfully", classroom });
     } catch (error) {
         console.error("Error adding students:", error);
         res.status(500).json({ message: error.message });

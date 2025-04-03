@@ -24,30 +24,30 @@ const ClassroomsPage = () => {
     };
 
     return (
-        <div className="p-6 pt-24 bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen">
+        <div className="p-6 pt-24 bg-base-100 text-base-content min-h-screen">
             <div className="max-w-6xl mx-auto">
                 <div className="flex items-center mb-6">
                     <button 
                         onClick={() => navigate('/')}
-                        className="btn btn-ghost text-blue-700 mr-4"
+                        className="btn btn-ghost text-primary mr-4"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                         Back
                     </button>
-                    <h1 className="text-3xl font-bold text-blue-800">Available Laboratories</h1>
+                    <h1 className="text-3xl font-bold text-primary">Your Labs</h1>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {classrooms.map((classroom) => (
                         <div 
                             key={classroom._id} 
-                            className="bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-shadow duration-300 p-6 cursor-pointer"
+                            className="bg-base-100 border border-base-300 rounded-xl hover:shadow-lg transition-shadow duration-300 p-6 cursor-pointer"
                             onClick={() => handleClassroomClick(classroom._id)}
                         >
-                            <h4 className="text-xl font-semibold text-blue-700 mb-2">{classroom.classroomName}</h4>
-                            <p className="text-gray-600 mb-4">{classroom.description}</p>
+                            <h4 className="text-xl font-semibold text-primary mb-2">{classroom.classroomName}</h4>
+                            <p className="text-base-content/70 mb-4">{classroom.description}</p>
                             <div className="flex flex-col space-y-2">
                                 <div className="flex items-center text-gray-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
