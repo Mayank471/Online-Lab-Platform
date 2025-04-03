@@ -42,7 +42,12 @@ export const getAssignmentForHomepage = async (req, res) => {
             classroomList = user.createdClassrooms;
         }
 
-        let assignments = [];
+        let assignments = {
+            active: [],
+            missed: [],
+            completed: []
+        };
+
         // Get the current date
         const currentDate = new Date(); 
 
@@ -51,17 +56,31 @@ export const getAssignmentForHomepage = async (req, res) => {
             // Skip if classroom not found
             if (!classroom) continue; 
 
-            // Filter assignments whose due date has not passed
-            const validAssignments = classroom.assignments
-                .filter(assignment => new Date(assignment.dueDate) >= currentDate)
-                .map(assignment => ({
-                    assignmentName: assignment.assignmentName,
-                    assignmentId : assignment._id,
-                    dueDate: assignment.dueDate,
-                    ...(role === 'instructor' && { totalSubmissions: assignment.submissions.length })// Include only for instructors
-                }));
-
-            assignments.push(...validAssignments);
+            classroom.assignments.forEach(assignment => {
+            const dueDate = new Date(assignment.dueDate);
+            if (dueDate > currentDate && assignment.status === 'published') {
+                assignments.active.push({
+                assignmentName: assignment.assignmentName,
+                assignmentId: assignment._id,
+                dueDate: assignment.dueDate,
+                ...(role === 'instructor' && { totalSubmissions: assignment.submissions.length })
+                });
+            } else if (dueDate < currentDate && assignment.status === 'published') {
+                assignments.missed.push({
+                assignmentName: assignment.assignmentName,
+                assignmentId: assignment._id,
+                dueDate: assignment.dueDate,
+                ...(role === 'instructor' && { totalSubmissions: assignment.submissions.length })
+                });
+            } else if (assignment.status === 'closed') {
+                assignments.completed.push({
+                assignmentName: assignment.assignmentName,
+                assignmentId: assignment._id,
+                dueDate: assignment.dueDate,
+                ...(role === 'instructor' && { totalSubmissions: assignment.submissions.length })
+                });
+            }
+            });
         }
 
         // Send filtered assignments to the client

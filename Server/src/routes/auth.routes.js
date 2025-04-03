@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
-router.get('/logout', logout);
+router.post('/logout', logout);
 
 // if user is authenticated they can call the below get function and checkAuth will run after protectRoute 
 // checks the if the user is authentic
