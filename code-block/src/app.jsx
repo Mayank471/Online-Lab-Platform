@@ -12,6 +12,7 @@ import { useThemeStore } from './store/useThemeStore.js'
 import HomePage from "./pages/HomePage.jsx";
 import ShowClassrooms from './pages/ShowClassrooms.jsx'
 import ClassroomPage from './pages/ClassroomPage.jsx'
+import EditorPage from "./pages/EditorPage.jsx"
 
 function App() {
   const {authUser,checkAuth,isCheckingAuth}= useAuthStore();
@@ -31,6 +32,7 @@ function App() {
       </div>
     )
   }
+ 
   return (
     <div data-theme= {theme}>
       <Navbar/>
@@ -43,6 +45,7 @@ function App() {
         {/* <Route path='/classrooms' element={authUser ? <ShowClassrooms/> : <Navigate to="/login" />} /> */}
         <Route path='/classrooms' element={ <ShowClassrooms/> } />
         <Route path='/classroom/:classroomId' element={<ClassroomPage />} />
+        <Route path='/assignment/:assignmentId' element={<EditorPage />} />
       </Routes>
       <Toaster/>
     </div>

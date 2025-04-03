@@ -177,3 +177,25 @@ export const getClassroomAssignments = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getAssignment = async (req, res) => {
+    try {
+        const { assignmentId } = req.params; // Get assignmentId from query params
+
+        if (!assignmentId) {
+            return res.status(400).json({ message: "Assignment ID is required" });
+        }
+
+        const assignment = await Assignment.findById(assignmentId);
+
+        if (!assignment) {
+            return res.status(404).json({ message: "Assignment not found" });
+        }
+
+        res.status(200).json(assignment);
+    } catch (error) {
+        console.error("Error fetching assignment:", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
