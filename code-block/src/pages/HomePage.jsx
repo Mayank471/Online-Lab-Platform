@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+//import Sidebar from '../components/sidebar.jsx';
 const HomePage = () => {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [classCode, setClassCode] = useState('');
@@ -42,6 +42,7 @@ const HomePage = () => {
     };
 
     return (
+        
         <div className="p-6 font-sans text-base-content bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen flex flex-col items-center pt-20">
             <header className="text-center mb-10">
                 <h1 className="text-5xl font-extrabold text-blue-800">Welcome to the Online Lab Platform</h1>
@@ -64,7 +65,6 @@ const HomePage = () => {
                     </button>
                 </section>
             </main>
-
             {isPopupVisible && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
