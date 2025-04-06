@@ -1,5 +1,6 @@
 import Assignment from "../models/Assignment.js" ;
 import Classroom from "../models/Classroom.js" ;
+import SubmittedCode from "../models/Submitions.js" ;
 import User from "../models/User.js" ;
 
 
@@ -203,4 +204,56 @@ export const getAssignment = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const submitAssignment = async (req, res) => {
+    try {
+        const { userId, assignmentId, classroomId, code } = req.body;
+
+        // Ensure required fields are provided
+        if (!userId || !assignmentId || !classroomId || !code) {
+            return res.status(400).json({ message: "Invalid input data" });
+        }
+
+        // Ensure assignment exists
+        const assignment = await Assignment.findById(assignmentId);
+        if (!assignment) {
+            return res.status(404).json({ message: "Assignment not found" });
+        }
+
+        // Ensure classroom exists
+        const classroom = await Classroom.findById(classroomId);
+        if (!classroom) {
+            return res.status(404).json({ message: "Classroom not found" });
+        }
+
+        // Save the submitted code (you need to implement this function in your model)
+        const submission = await SubmittedCode.saveCode({ userId, assignmentId, classroomId, code });
+
+        res.status(201).json({ message: "Code submitted successfully", submission });
+    } catch (error) {
+        console.error("Error submitting assignment:", error);
+        res.status(500).json({ message: error.message });
+    }
+}
+export const getSubmittedCode = async (req, res) => {
+    const { userId, assignmentId } = req.params;
+    try {
+        // Ensure required fields are provided
+        if (!userId || !assignmentId) {
+            return res.status(400).json({ message: "Invalid input data" });
+        }
+
+        // Fetch the submitted code from the database
+        const submission = await SubmittedCode.findOne({ userId, assignmentId });
+
+        if (!submission) {
+            return res.status(404).json({ message: "No submission found for this assignment" });
+        }
+
+        res.status(200).json(submission);
+    } catch (error) {
+        console.error("Error fetching submitted code:", error);
+        res.status(500).json({ message: error.message });
+    }
+}
 
