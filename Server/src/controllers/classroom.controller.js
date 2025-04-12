@@ -62,6 +62,9 @@ export const createClassroom = async (req, res) => {
             return res.status(400).json({ message: "Invalid input data" });
         }
 
+        // trim classroomName and classroomCode
+        const trimmedClassroomName = classroomName.trim();
+        const trimmedClassroomCode = classroomCode.trim();
         // Ensure instructor exists
         const instructor = await User.findById(instructorId);
         if (!instructor) {
@@ -69,7 +72,7 @@ export const createClassroom = async (req, res) => {
         }
 
         // Ensure classroomCode is unique
-        const isCodeSame = await Classroom.findOne({classroomCode});
+        const isCodeSame = await Classroom.findOne({trimmedClassroomCode});
         if(isCodeSame){
             return res.status(400).json({message : " classroomCode is not unique choose something else"})
         }
@@ -77,10 +80,10 @@ export const createClassroom = async (req, res) => {
 
         // Create the classroom
         const classroom = await Classroom.create({
-            classroomName,
+            classroomName: trimmedClassroomName,
             description,
             instructorId,
-            classroomCode,
+            classroomCode:trimmedClassroomCode,
         });
 
         //console.log("Classroom created:", classroom);
@@ -101,6 +104,7 @@ export const createClassroom = async (req, res) => {
 
 export const addStudents = async (req, res) => {
     try {
+        //console.log("Adding students to classroom...");
         const { classCode, username } = req.body;
 
         // Ensure classCode and username are provided
@@ -124,6 +128,12 @@ export const addStudents = async (req, res) => {
         await Classroom.findByIdAndUpdate(
             classroom._id,
             { $addToSet: { enrolledStudents: student._id } },
+        );
+
+        // Add classroom to student's enrolledClassrooms list
+        await User.findByIdAndUpdate(
+            student._id,
+            { $addToSet: { enrolledClassrooms: classroom._id } },
         );
 
         res.status(201).json({ message: "Student added successfully", classroom });
@@ -207,10 +217,10 @@ export const getAssignment = async (req, res) => {
 
 export const submitAssignment = async (req, res) => {
     try {
-        const { userId, assignmentId, classroomId, code } = req.body;
+        const { userId, assignmentId, code ,score} = req.body;
 
         // Ensure required fields are provided
-        if (!userId || !assignmentId || !classroomId || !code) {
+        if (!userId || !assignmentId || !code  || !score) {
             return res.status(400).json({ message: "Invalid input data" });
         }
 
@@ -220,14 +230,14 @@ export const submitAssignment = async (req, res) => {
             return res.status(404).json({ message: "Assignment not found" });
         }
 
-        // Ensure classroom exists
-        const classroom = await Classroom.findById(classroomId);
-        if (!classroom) {
-            return res.status(404).json({ message: "Classroom not found" });
-        }
+        // // Ensure classroom exists
+        // const classroom = await Classroom.findById(classroomId);
+        // if (!classroom) {
+        //     return res.status(404).json({ message: "Classroom not found" });
+        // }
 
         // Save the submitted code (you need to implement this function in your model)
-        const submission = await SubmittedCode.saveCode({ userId, assignmentId, classroomId, code });
+        const submission = await SubmittedCode.saveCode({ userId, assignmentId , code ,score});
 
         res.status(201).json({ message: "Code submitted successfully", submission });
     } catch (error) {
@@ -256,4 +266,5 @@ export const getSubmittedCode = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
 

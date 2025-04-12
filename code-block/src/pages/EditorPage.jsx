@@ -8,6 +8,7 @@ import { oneDark } from "@codemirror/theme-one-dark";
 import { useClassroomStore } from "../store/useClassroomStore.js";
 import { useParams } from "react-router-dom";
 
+
 const languageExtensions = {
   c: cpp(),
   cpp: cpp(),
@@ -23,21 +24,18 @@ const EditorPage = () => {
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("python3");
   const [selectedTestCase, setSelectedTestCase] = useState("");
-  const [assignment, setAssignment] = useState(null); // State to store the fetched assignment
-  const [showInput, setShowInput] = useState(true); // State to toggle between input and output
+  const [assignment, setAssignment] = useState(null);
+  const [showInput, setShowInput] = useState(true);
+  const [score, setScore] = useState(null); // State to store the score
 
-  // Get the assignment ID from the URL params
   const { assignmentId } = useParams();
-  //console.log("Fetching assignment with ID:", assignmentId);
-  // Load the assignment using the store
-  const { getAssignment } = useClassroomStore();
+  const { getAssignment, submitAssignment } = useClassroomStore(); // Import the hypothetical function
 
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        
-        const fetchedAssignment = await getAssignment(assignmentId); // Call the store function
-        setAssignment(fetchedAssignment); // Store the assignment in state
+        const fetchedAssignment = await getAssignment(assignmentId);
+        setAssignment(fetchedAssignment);
       } catch (error) {
         console.error("Error fetching assignment:", error);
       }
@@ -48,10 +46,8 @@ const EditorPage = () => {
     }
   }, [assignmentId, getAssignment]);
 
-  // Fetch test cases from the assignment description
   testCasesList = assignment?.testCases || [];
-  console.log("Test cases list:", testCasesList);
-  
+
   const handleRun = async () => {
     console.log("Language sent:", language);
     try {
@@ -78,9 +74,42 @@ const EditorPage = () => {
     }
   };
 
-  const submit = () => {
-    // Define the submit function logic here
-    console.log("Submit button clicked");
+  const evaluateCode = async () => {
+    let passedTestCases = 0;
+
+    for (const testCase of testCasesList) {
+      try {
+        const response = await fetch("http://localhost:5000/api/compile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            script,
+            language,
+            versionIndex: 3,
+            stdin: testCase.input,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        if (data.output.trim() === testCase.expectedOutput.trim()) {
+          passedTestCases++;
+        }
+      } catch (error) {
+        console.error("Error evaluating test case:", error);
+      }
+    }
+
+    const totalTestCases = testCasesList.length;
+    const calculatedScore = Math.round((passedTestCases / totalTestCases) * 100);
+    setScore(calculatedScore);
+
+    // Call the evaluate function with the score, assignmentId
+    
+    submitAssignment(script,calculatedScore, assignmentId);
   };
 
   return (
@@ -95,15 +124,6 @@ const EditorPage = () => {
           <p className="text-sm">
             {assignment ? assignment.description : "Fetching assignment details..."}
           </p>
-          {/* <pre className="text-xs mt-2 bg-gray-700 p-2 rounded">
-            Example 1:  
-            Input: [1, 2, 3]  
-            Output: 6  
-
-            Example 2:  
-            Input: [-1, 0, 1]  
-            Output: 0  
-          </pre> */}
         </div>
 
         {/* Test Cases Selector */}
@@ -113,7 +133,7 @@ const EditorPage = () => {
             className="w-full p-2 bg-gray-700 text-white rounded"
             onChange={(e) => {
               const testCase = testCasesList.find(tc => tc._id === e.target.value);
-              setSelectedTestCase(testCase?.input || "");
+              setSelectedTestCase(testCase?.expectedOutput || "");
               setInput(testCase?.input || "");
             }}
           >
@@ -166,10 +186,17 @@ const EditorPage = () => {
             </select>
 
             <div className="flex items-center gap-2">
+              {/* Score Display */}
+              {score !== null && (
+                <span className="text-green-500 font-semibold">
+                  Score: {score}%
+                </span>
+              )}
+
               {/* Submit Button */}
               <button
                 className="bg-green-500 px-4 py-0.5 rounded text-white hover:bg-green-600"
-                onClick={() => submit()} // Call the submit function (to be defined later)
+                onClick={evaluateCode}
               >
                 Submit
               </button>
@@ -184,9 +211,9 @@ const EditorPage = () => {
             </div>
           </div>
         </div>
- 
-         {/* Input/Output Toggle Section */}
-         <div className="bg-gray-800 p-4 rounded-lg h-full">
+
+        {/* Input/Output Toggle Section */}
+        <div className="bg-gray-800 p-4 rounded-lg h-full">
           <div className="flex justify-between mb-2">
             {/* Toggle Buttons */}
             <button

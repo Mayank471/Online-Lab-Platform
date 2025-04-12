@@ -12,11 +12,6 @@ const submittedCodeSchema = new mongoose.Schema({
     required: true,
     ref: 'Assignment'
   },
-  classroomId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Classroom'
-  },
   code: {
     type: String,
     required: true
@@ -24,17 +19,21 @@ const submittedCodeSchema = new mongoose.Schema({
   submittedAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  score: {
+    type: Number,
+    default: null
+  },
 });
 
 // Static method to save submitted code
-submittedCodeSchema.statics.saveCode = async function({ userId, assignmentId, classroomId, code }) {
+submittedCodeSchema.statics.saveCode = async function({ userId, assignmentId, code ,score}) {
   try {
     const submission = new this({
       userId,
       assignmentId,
-      classroomId,
-      code
+      code,
+      score
     });
 
     return await submission.save();
@@ -43,6 +42,7 @@ submittedCodeSchema.statics.saveCode = async function({ userId, assignmentId, cl
     throw err;
   }
 };
+
 
 // Create and export the model
 const SubmittedCode = mongoose.model('SubmittedCode', submittedCodeSchema);

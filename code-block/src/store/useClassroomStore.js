@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
-//import {useAuthStore} from "./useAuthStore";
+import {useAuthStore} from "./useAuthStore";
 
 export const useClassroomStore = create((set, get) => ({
     classrooms: [],
@@ -26,7 +26,7 @@ export const useClassroomStore = create((set, get) => ({
     getAssignments: async (userId) => {
         set({ isAssignmentLoading: true });
         try {
-            const res = await axiosInstance.get(`/dashboard/getAssignments`);
+            const res = await axiosInstance.get(`/dashboard/getAssignments`, { params: { userId } });
             set({ assignments: res.data });
         } catch (error) {
             toast.error(error.response?.data?.error || "Failed to fetch assignments");
@@ -47,4 +47,16 @@ export const useClassroomStore = create((set, get) => ({
     
 
     setSelectedClassroom: (selectedClassroom) => set({ selectedClassroom }),
+
+    // function to submit scores (post userID and assignmentId and score)
+    submitAssignment: async (code,score, assignmentId) => {
+        try {
+            const {authUser}= useAuthStore();
+            const res = await axiosInstance.post(`/classroom/submitAssignment}`, { assignmentId,score, UserId: authUser._id, code });
+            console.log(res.data);
+            toast.success("Scores submitted successfully!");
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Failed to submit scores");
+        }
+    },
 }));
