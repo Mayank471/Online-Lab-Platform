@@ -44,15 +44,15 @@ const HomePage = () => {
         try {
             const response = await axiosInstance.post('/classroom/addStudents', {
                 classCode,
-                username, // Include username in the request
+                username,
             });
             alert('Successfully added the student to the class!');
             setIsPopupVisible(false);
             setClassCode('');
             setUsername('');
         } catch (error) {
-            console.error('Error adding student to class:', error);
-            alert('Failed to add the student. Please check the class code and username.');
+            console.error('Error adding student to class:', error.response?.data || error.message);
+            alert(error.response?.data?.message || 'Failed to add the student. Please check the class code and username.');
         }
     };
 
@@ -63,7 +63,8 @@ const HomePage = () => {
     return (
         <div className="p-6 font-sans text-base-content bg-base-100 min-h-screen flex flex-col items-center pt-20">
             <header className="text-center mb-10">
-                <h1 className="text-5xl font-extrabold text-primary">Welcome to the Online Lab Platform</h1>
+                <h1 className="text-5xl font-extrabold text-primary">Welcome to the ByteForge</h1>
+                <h1 className="text-5xl font-extrabold text-primary">Online Lab Platform</h1>
                 <p className="text-base-content/70 mt-4 text-lg">Your gateway to interactive learning and experimentation</p>
             </header>
             <main className="w-full max-w-4xl">

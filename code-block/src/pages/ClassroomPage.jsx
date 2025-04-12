@@ -36,8 +36,14 @@ const ClassroomPage = () => {
         <div className="p-6 pt-24">
             <div className="max-w-6xl mx-auto">
                 <div className="mb-8 flex items-center justify-between">
-                    <button onClick={() => navigate('/classrooms')} className="btn btn-ghost">
-                        Back to Classrooms
+                    <button 
+                        onClick={() => navigate('/classrooms')} 
+                        className="btn btn-ghost text-primary flex items-center gap-2 hover:bg-primary hover:text-white transition-colors duration-300"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        <span>Back to Classrooms</span>
                     </button>
                     <div className="flex gap-2">
                         <button 
