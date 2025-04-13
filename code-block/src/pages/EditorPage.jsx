@@ -29,7 +29,7 @@ const EditorPage = () => {
   const [score, setScore] = useState(null); // State to store the score
 
   const { assignmentId } = useParams();
-  const { getAssignment, submitAssignment } = useClassroomStore(); // Import the hypothetical function
+  const { getAssignment, submitAssignment, getSubmittedCode} = useClassroomStore(); // Import the submitAssignment function
 
   useEffect(() => {
     const fetchAssignment = async () => {
@@ -45,6 +45,25 @@ const EditorPage = () => {
       fetchAssignment();
     }
   }, [assignmentId, getAssignment]);
+
+  // fetch the submitted code with assignment id 
+  useEffect(() => {
+    const fetchSubmittedCode = async () => {
+      try {
+        const submittedCode = await getSubmittedCode(assignmentId);
+        if (submittedCode) {
+          setCode(submittedCode.code); // Set the code in the editor
+          setScore(submittedCode.score); // Set the score in the editor
+        }
+      } catch (error) {
+        console.error("Error fetching submitted code:", error);
+      }
+    };
+    if (assignmentId) {
+      fetchSubmittedCode();
+    }
+  }, [assignmentId, getSubmittedCode]);
+
 
   testCasesList = assignment?.testCases || [];
 
@@ -101,6 +120,7 @@ const EditorPage = () => {
       } catch (error) {
         console.error("Error evaluating test case:", error);
       }
+      break;
     }
 
     const totalTestCases = testCasesList.length;
@@ -108,8 +128,8 @@ const EditorPage = () => {
     setScore(calculatedScore);
 
     // Call the evaluate function with the score, assignmentId
-    
-    submitAssignment(script,calculatedScore, assignmentId);
+    //console.log("Submitting assignment with score:", calculatedScore);
+    await submitAssignment(script,calculatedScore, assignmentId);
   };
 
   return (

@@ -35,7 +35,16 @@ submittedCodeSchema.statics.saveCode = async function({ userId, assignmentId, co
       code,
       score
     });
-
+    // before saving check if the user has already submitted the code for this assignment
+    const existingSubmission = await this.findOne({ userId, assignmentId });
+    
+    if (existingSubmission) {
+      // Update the existing submission
+      existingSubmission.code = code;
+      existingSubmission.score = score;
+      return await existingSubmission.save();
+    }
+    // If no existing submission, save the new one
     return await submission.save();
   } catch (err) {
     console.error('Error in SubmittedCode.saveCode:', err);

@@ -220,7 +220,7 @@ export const submitAssignment = async (req, res) => {
         const { userId, assignmentId, code ,score} = req.body;
 
         // Ensure required fields are provided
-        if (!userId || !assignmentId || !code  || !score) {
+        if (!userId || !assignmentId) {
             return res.status(400).json({ message: "Invalid input data" });
         }
 
