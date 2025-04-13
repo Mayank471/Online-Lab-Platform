@@ -24,6 +24,7 @@ const SettingsPage = () => {
                         <div>
                             <p><strong>Name:</strong> {authUser.firstName} {authUser.lastName}</p>
                             <p><strong>Email:</strong> {authUser.email}</p>
+                            <p><strong>Role:</strong> {authUser.role}</p>
                         </div>
                     ) : (
                         <p>No user details available.</p>
