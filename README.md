@@ -116,34 +116,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 
 [^1]: https://github.com/Mayank471/Online-Lab-Platform
-
-[^2]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9729124/
-
-[^3]: https://pypi.org/project/mayalabs/
-
-[^4]: https://github.com/moabukar/labs
-
-[^5]: https://pubs.rsc.org/en/content/articlehtml/2023/dd/d3dd00032j
-
-[^6]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9860455/
-
-[^7]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9046347/
-
-[^8]: https://ourcodingclub.github.io/tutorials/git-for-labs/
-
-[^9]: https://pmc.ncbi.nlm.nih.gov/articles/PMC11828340/
-
-[^10]: https://github.com/AyakaLab/ayakalab.github.io
-
-[^11]: https://github.com/babaissarkar/MyOpenLab/actions
-
-[^12]: https://arxiv.org/html/2408.09344v2
-
-[^13]: https://pmc.ncbi.nlm.nih.gov/articles/PMC9058852/
-
-[^14]: https://dev.to/krishnakakade/free-github-learning-labs-a-to-z-of-web-development-3501
-
-[^15]: https://www.mdpi.com/2079-9292/9/11/1832
-
-[^16]: https://github.com/topics/laboratory?o=desc\&s=updated
-

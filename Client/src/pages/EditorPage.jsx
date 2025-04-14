@@ -7,7 +7,7 @@ import { java } from "@codemirror/lang-java";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { useClassroomStore } from "../store/useClassroomStore.js";
 import { useParams } from "react-router-dom";
-
+import { axiosInstance } from "../lib/axios.js";
 
 const languageExtensions = {
   c: cpp(),
@@ -70,22 +70,20 @@ const EditorPage = () => {
   const handleRun = async () => {
     console.log("Language sent:", language);
     try {
-      const response = await fetch("http://localhost:5000/api/compile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          script,
-          language,
-          versionIndex: 3,
-          stdin: input,
-        }),
+      const response = await axiosInstance.post('/compile', {
+        script,
+        language,
+        versionIndex: 3,
+        stdin: input,
       });
 
-      if (!response.ok) {
+      console.log("Response from server:", response);
+
+      if (response.status < 200 || response.status >= 300) {
         throw new Error(`Server error: ${response.statusText}`);
       }
 
-      const data = await response.json();
+      const data = response.data;
       setOutput(data.output || "No output received");
     } catch (error) {
       console.error("Error executing code:", error);
@@ -98,22 +96,27 @@ const EditorPage = () => {
 
     for (const testCase of testCasesList) {
       try {
-        const response = await fetch("http://localhost:5000/api/compile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            script,
-            language,
-            versionIndex: 3,
-            stdin: testCase.input,
-          }),
+        const response = await axiosInstance.post("/compile", {
+          script,
+          language,
+          versionIndex: 3,
+          stdin: testCase.input,
         });
-
-        if (!response.ok) {
+        // const response = await fetch("http://localhost:5000/api/compile", {
+        //   method: "POST",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify({
+        //     script,
+        //     language,
+        //     versionIndex: 3,
+        //     stdin: testCase.input,
+        //   }),
+        // });
+        if (response.status < 200 || response.status >= 300) {
           throw new Error(`Server error: ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data = await response.data;
         if (data.output.trim() === testCase.expectedOutput.trim()) {
           passedTestCases++;
         }
