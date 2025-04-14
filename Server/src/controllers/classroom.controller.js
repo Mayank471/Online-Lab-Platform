@@ -6,11 +6,13 @@ import User from "../models/User.js" ;
 
 export const createAssignment = async (req, res) => {
     try {
-        const { assignmentName, description, dueDate, classroomId, testCases } = req.body;
+        console.log("Request body:", req.body); // Debugging log
+
+        const { assignmentName, description, dueDate, classroomId, testCases = {} } = req.body;
 
         // Ensure required fields are provided
-        if (!assignmentName || !dueDate || !classroomId || !testCases || Object.keys(testCases).length === 0 || description == "") {
-            return res.status(400).json({ message: "Invalid input data or empty test cases" });
+        if (!assignmentName || !dueDate || !classroomId || description === "") {
+            return res.status(400).json({ message: "Invalid input data" });
         }
 
         // Ensure classroom exists
@@ -24,27 +26,23 @@ export const createAssignment = async (req, res) => {
             return res.status(400).json({ message: "Due date must be in the future" });
         }
 
-        // Ensure testCases is a valid object
-        const testCasesObject = testCases && typeof testCases === "object" ? testCases : {};
-
-
         // Create the assignment
         const assignment = await Assignment.create({
             assignmentName,
             dueDate,
             classroomId,
             description,
-            testCases: testCasesObject,
+            testCases,
         });
 
         res.status(201).json({ assignment });
 
-        // add this assignment to the reapective classroom
+        // Add this assignment to the respective classroom
         await Classroom.findByIdAndUpdate(
             classroomId,
-            { $push : {assignments: assignment._id}  } ,
+            { $push: { assignments: assignment._id } },
         );
-        
+
     } catch (error) {
         console.error("Error creating assignment:", error);
         res.status(500).json({ message: error.message });
