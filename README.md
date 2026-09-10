@@ -88,6 +88,35 @@ http://localhost:5000
 ```
 
 
+## Deploying to Vercel
+
+The repository deploys as a single Vercel project: the Vite client is served as
+static files and the Express API runs as one serverless function at `api/index.js`.
+
+1. Import the repository at [vercel.com/new](https://vercel.com/new) and keep the
+   root directory as `./`. `vercel.json` already sets the build command and the
+   `Client/dist` output directory, so leave the framework preset on "Other".
+2. Add these environment variables in **Settings -> Environment Variables** for
+   the Production, Preview, and Development scopes:
+
+   | Variable | Purpose |
+   | --- | --- |
+   | `MONGO_URI` | MongoDB Atlas connection string |
+   | `JWT_SECRET` | Secret used to sign the auth cookie |
+   | `Jdoodle_clientID` | JDoodle client id |
+   | `Jdoodle_clientSecret` | JDoodle client secret |
+   | `JDoodle_API_URL` | `https://api.jdoodle.com/v1/execute` |
+
+3. In MongoDB Atlas, allow access from anywhere (`0.0.0.0/0`) under **Network
+   Access**. Vercel functions do not have fixed outbound IP addresses on the
+   Hobby plan.
+4. Deploy. Confirm the API is live at `https://<your-app>.vercel.app/api/health`,
+   which returns `{"status":"ok"}` without touching the database.
+
+`CLIENT_URL` is only needed if the client is hosted on a different domain than
+the API. On a single Vercel project the browser calls `/api` on its own origin.
+
+
 ## Contributing
 
 We welcome contributions to improve the Online Lab Platform! If you're interested in contributing, please:

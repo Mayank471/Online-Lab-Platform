@@ -10,3 +10,9 @@ yarn-error.log
 # Logs
 logs
 *.log
+
+# Build output
+Client/dist/
+
+# Vercel
+.vercel

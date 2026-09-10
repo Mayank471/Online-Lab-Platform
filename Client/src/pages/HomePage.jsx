@@ -18,9 +18,8 @@ const HomePage = () => {
 
     const fetchClassrooms = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/classroom');
-            const data = await response.json();
-            setClassrooms(data);
+            const response = await axiosInstance.get('/classroom');
+            setClassrooms(response.data);
         } catch (error) {
             console.error('Error fetching classrooms:', error);
         }
