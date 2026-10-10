@@ -45,8 +45,8 @@ export const register = async (req,res)=>{
 
         // validate the newuser
         if(newUser){
-            generateToken(newUser._id,res);
             await newUser.save();
+            generateToken(newUser._id,res);
 
             // add this newUser to the response
             res.status(201).json({
@@ -67,7 +67,7 @@ export const register = async (req,res)=>{
 
     } catch (error) {
         console.log("error in signup controller :",error);
-        res.status(500).json({error: "Internal Server Error"});
+        res.status(500).json({message: "Internal Server Error"});
     }
 }
 
