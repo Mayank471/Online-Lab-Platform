@@ -17,15 +17,22 @@ const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-app.use(
+// Browsers send an Origin header on same-origin POSTs too, so a request whose
+// Origin matches the Host it was sent to must be allowed (the Vercel deployment).
+app.use((req, res, next) =>
   cors({
     origin(origin, callback) {
-      // No origin header: same-origin request, curl, or a server-to-server call.
+      // No origin header: curl or a server-to-server call.
       if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+      try {
+        if (new URL(origin).host === req.headers.host) return callback(null, true);
+      } catch {
+        // malformed Origin header, fall through to rejection
+      }
+      return callback(null, false);
     },
     credentials: true,
-  })
+  })(req, res, next)
 );
 
 app.use(express.json());
